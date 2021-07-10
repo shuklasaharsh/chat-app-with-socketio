@@ -34,7 +34,8 @@ socket.on('chat', (response) => {
     const text = response.text
     const html = Mustache.render(messageTemplate, {
         messageData: text,
-        createdAt: moment(response.createdAt).format('H:m a')
+        createdAt: moment(response.createdAt).format('H:m a'),
+        username
     })
     $messages.insertAdjacentHTML('beforeend', html)
 })
@@ -63,9 +64,18 @@ socket.on('sendLocation', ({url, createdAt}) => {
     console.log(url)
     const html = Mustache.render(locationTemplate, {
         url,
-        createdAt: moment(createdAt).format('h:m a')
+        createdAt: moment(createdAt).format('h:m a'),
+        username
     })
     $messages.insertAdjacentHTML('beforeend', html)
 })
 
-socket.emit('join', {username, room})
+socket.emit('join', {username, room}, (response)=> {
+    if (response.error) {
+        alert(response)
+        location.href = '/'
+    }
+
+    alert(response)
+
+})
