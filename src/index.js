@@ -24,8 +24,15 @@ app.get('', (req,res)=>{
 
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
-    socket.emit('chat', generateMessage('Welcome!'))
-    socket.broadcast.emit('chat', generateMessage('A new user has joined'))
+
+    socket.on('join', ({username, room}) => {
+        socket.join(room)
+        socket.emit('chat', generateMessage('Welcome!'))
+        socket.broadcast.to(room).emit('chat', generateMessage(`${username} has joined`))
+        socket.on('disconnect',() => {
+            io.emit('chat', generateMessage('A user has left'))
+        })
+    })
     socket.on('chat', (response, callback)=> {
         const filter = new Filter()
         if(filter.isProfane(response)) {
@@ -36,9 +43,7 @@ io.on('connection', (socket) => {
         callback('Success')
     })
 
-    socket.on('disconnect',() => {
-        io.emit('chat', generateMessage('A user has left'))
-    })
+
 
     socket.on('location', (response, callback) => {
         let sendData = `https://google.com/maps?q=${response.latitude},${response.longitude}`

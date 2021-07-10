@@ -10,6 +10,10 @@ const $messages = document.querySelector('#messages')
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const locationTemplate = document.querySelector('#message-template-location').innerHTML
 
+// Options
+const {username, room} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+
+
 $chatForm.addEventListener('submit', (e) => {
     e.preventDefault()
     // Disable
@@ -63,3 +67,5 @@ socket.on('sendLocation', ({url, createdAt}) => {
     })
     $messages.insertAdjacentHTML('beforeend', html)
 })
+
+socket.emit('join', {username, room})
