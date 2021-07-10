@@ -5,10 +5,31 @@
     <title>Chat app</title>
 </head>
 <body>
-Chat app
-<input id="message" type="text">
-<button id="increment">+1</button>
-<script src = "/socket.io/socket.io.js"></script>
-<script src = "/js/chat.js"></script>
+<h1>Chat app</h1>
+<div id="messages"></div>
+<form id="chat-form">
+    <input type="text" id="chat-form-input" name="message">
+    <button>Submit</button>
+</form>
+<button id="location">Send Location</button>
+<script id="message-template" type="text/html">
+    <div>
+        <p>{{createdAt}} - {{messageData}}</p>
+    </div>
+</script>
+
+<script id="message-template-location" type="text/html">
+    <div>
+        <p><a href={{url}} target="_blank">{{createdAt}} - MY CURRENT LOCATION</a></p>
+    </div>
+</script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>
 </body>
 </html>

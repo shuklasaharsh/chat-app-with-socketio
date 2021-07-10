@@ -3,6 +3,9 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socket = require('socket.io')
+const Filter = require('bad-words')
+// Files
+const {generateMessage, generateLocationMessage} = require('./utils/messages')
 
 const app = express()
 const server = http.createServer(app)
@@ -19,19 +22,29 @@ app.get('', (req,res)=>{
     })
 })
 
-/*let count = 0
 io.on('connection', (socket) => {
-    console.log('something')
-    socket.emit('countUpdated', count)
-    socket.on('increment', ()=> {
-        count++
-        // socket.emit('countUpdated', count)
-        io.emit('countUpdated', count)
+    console.log('New WebSocket connection')
+    socket.emit('chat', generateMessage('Welcome!'))
+    socket.broadcast.emit('chat', generateMessage('A new user has joined'))
+    socket.on('chat', (response, callback)=> {
+        const filter = new Filter()
+        if(filter.isProfane(response)) {
+            callback('Error')
+            return socket.emit('chat', generateMessage("Profanity is not accepted"))
+        }
+        socket.broadcast.emit('chat', generateMessage(response))
+        callback('Success')
     })
-})*/
 
-io.on('connection', (socket) => {
-    socket.emit('message', 'Welcome!')
+    socket.on('disconnect',() => {
+        io.emit('chat', generateMessage('A user has left'))
+    })
+
+    socket.on('location', (response, callback) => {
+        let sendData = `https://google.com/maps?q=${response.latitude},${response.longitude}`
+        socket.broadcast.emit('sendLocation', generateLocationMessage(sendData))
+        callback('Location Shared!')
+    })
 })
 
 
@@ -39,3 +52,4 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log('Server listening on port: ' + port)
 })
+
