@@ -3,27 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat app</title>
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    <link rel="icon" href="./img/favicon.png">
+
 </head>
 <body>
-<h1>Chat app</h1>
-<div id="messages"></div>
-<form id="chat-form">
-    <input type="text" id="chat-form-input" name="message">
-    <button>Submit</button>
-</form>
-<button id="location">Send Location</button>
+<div class="chat">
+    <div class="chat__sidebar">
+
+    </div>
+    <div class="chat__main">
+        <div id="messages" class="chat__messages"></div>
+        <div class="compose">
+            <form id="chat-form">
+                <input type="text" id="chat-form-input" name="message">
+                <button>Submit</button>
+            </form>
+            <button id="location">Send Location</button>
+
+        </div>
+
+    </div>
+</div>
+
 <script id="message-template" type="text/html">
-    <div>
-        <p>{{createdAt}} - {{messageData}}</p>
+    <div class="message">
+        <p>
+            <span class="message__name">UserName</span>
+            <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p>{{messageData}}</p>
     </div>
 </script>
 
 <script id="message-template-location" type="text/html">
-    <div>
-        <p><a href={{url}} target="_blank">{{createdAt}} - MY CURRENT LOCATION</a></p>
+    <div class="message">
+        <p>
+            <span class="message__name">UserName</span>
+            <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p><a href={{url}} target="_blank">location</a></p>
     </div>
 </script>
-
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
